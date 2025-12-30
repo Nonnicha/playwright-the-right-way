@@ -9,6 +9,7 @@ export class CheckoutPage {
     readonly postalcodeField: Locator;
     readonly confirmPaymentButton: Locator;
     readonly totalPrice: Locator;
+    readonly errorMessage: Locator;
     
     constructor(page: Page) {
         this.page = page;
@@ -19,6 +20,7 @@ export class CheckoutPage {
         this.postalcodeField = page.getByTestId('zipcode-field');
         this.totalPrice = page.getByTestId('total-price');
         this.confirmPaymentButton = page.getByTestId('confirm-payment-button');
+        this.errorMessage = page.getByTestId('error-message-label');
     }
 
     async visitCheckoutPage() {
@@ -43,5 +45,10 @@ export class CheckoutPage {
     async getTotalPrice(): Promise<string | null> {
         await this.page.waitForTimeout(1000);
         return await this.totalPrice.textContent();
+    }
+
+    async verifyErrorMessage(expectedMessage: string) {
+        await expect(this.errorMessage).toBeVisible();
+        await expect(this.errorMessage).toHaveText(expectedMessage);
     }
 }
